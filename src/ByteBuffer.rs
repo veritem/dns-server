@@ -1,22 +1,22 @@
 pub struct BytePacketBuffer {
-    pub buf: [u8;512],
-    pub pos: usize
+    pub buf: [u8; 512],
+    pub pos: usize,
 }
 
 impl BytePacketBuffer {
-
-    // This give us a fresh buffer for holding the packet contents, and a 
-    // field for keeping track of where we are. 
+    // This give us a fresh buffer for holding the packet contents, and a
+    // field for keeping track of where we are.
     pub fn new() -> BytePacketBuffer {
-        BytePacketBuffer { buf: [0;512], pos: 0 }
-    }   
-
+        BytePacketBuffer {
+            buf: [0; 512],
+            pos: 0,
+        }
+    }
 
     // Current position within buffer
     fn pos(&self) -> usize {
         self.pos
     }
-
 
     // Step the buffer position forward a specific number of steps
     fn step(&mut self, steps: usize) -> Result<()> {
@@ -25,28 +25,27 @@ impl BytePacketBuffer {
         Ok(())
     }
 
-
     /// Change the buffer position
-    fn seek(&mut self, pos: usize) -> Result<()>{
+    fn seek(&mut self, pos: usize) -> Result<()> {
         self.pos = pos;
 
-      Ok(())
+        Ok(())
     }
 
     /// Read a single byte and move the position one step forward
-     fn read(&mut self)  -> Result<u8, _> {
-         if self.pos >= 512 {
-                return Err("End of buffer".into());
-         }
-         let res = self.buf[self.pos];
-         self.pos  += 1;
-         Ok(res)
-     }
+    fn read(&mut self) -> Result<u8, _> {
+        if self.pos >= 512 {
+            return Err("End of buffer".into());
+        }
+        let res = self.buf[self.pos];
+        self.pos += 1;
+        Ok(res)
+    }
 
     /// Get a single byte, without changing the buffer position
     fn get(&mut self, pos: usize) -> Result<u8> {
         if pos >= 512 {
-        return Err("End of buffer".into());
+            return Err("End of buffer".into());
         }
         Ok(self.buf[pos])
     }
@@ -55,6 +54,4 @@ impl BytePacketBuffer {
         let res = ((self.read()? as u16) << 8) | (self.read()? as u16);
         OK(res)
     }
-
-    // TODO: start from here https://github.com/EmilHernvall/dnsguide/blob/master/chapter1.md 
- }
+}
